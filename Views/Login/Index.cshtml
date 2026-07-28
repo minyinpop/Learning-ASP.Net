@@ -8,28 +8,39 @@
 
 <html lang="">
 <head>
-    <title>足立レイ AI 機器人 - 登入</title>
+    <title>
+        足立レイ AI 機器人 - 登入
+    </title>
 </head>
 
 <body>
 <div>
-    <h1>帳號登入</h1>
+    <h3>
+        帳號登入
+    </h3>
 </div>
 
-<div>
-    <p>帳號：</p>
-    <input
-        type="text"
-        title="username"
-        placeholder="帳號"/>
-</div>
+<form method="post">
+    <div>
+        <input
+            type="text"
+            name="username"
+            placeholder="帳號"/>
+    </div>
 
-<div>
-    <p>密碼：</p>
-    <input
-        type="password"
-        title="password"
-        placeholder="密碼"/>
-</div>
+    <div>
+        <input
+            type="password"
+            name="password"
+            placeholder="密碼"/>
+    </div>
+
+    <div>
+        <button
+            type="submit">
+            登入
+        </button>
+    </div>
+</form>
 </body>
 </html>
