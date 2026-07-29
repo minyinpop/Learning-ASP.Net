@@ -1,10 +1,10 @@
-const username = document.getElementById("username");
-const password = document.getElementById("password");
-const loginButton = document.getElementById("loginButton");
+const confirmButton = document.getElementById("confirmButton");
+const registerPageButton = document.getElementById("registerPageButton");
 
-loginButton.addEventListener("click", onClickLoginButton);
+confirmButton.addEventListener("click", OnClickConfirmButton);
+registerPageButton.addEventListener("click", OnClickRegisterPageButton);
 
-async function onClickLoginButton()
+async function OnClickConfirmButton()
 {
     const response = await fetch("/Login/Test",
         {
@@ -14,4 +14,9 @@ async function onClickLoginButton()
     await response.json();
     
     console.log(response.message);
+}
+
+async function OnClickRegisterPageButton()
+{
+    window.location.href = "/Register";
 }
