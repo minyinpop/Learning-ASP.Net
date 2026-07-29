@@ -6,5 +6,12 @@ loginButton.addEventListener("click", onClickLoginButton);
 
 async function onClickLoginButton()
 {
-    console.log("Login Button Clicked!")
+    const response = await fetch("/Login/Test",
+        {
+            method: "POST"
+        });
+    
+    await response.json();
+    
+    console.log(response.message);
 }
