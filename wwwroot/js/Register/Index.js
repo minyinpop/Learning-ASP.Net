@@ -11,12 +11,52 @@ loginPageButton.addEventListener("click", OnClickLoginPageButton);
 
 async function OnClickConfirmButton()
 {
-    if (emailInput.value.includes("@") && emailInput.value.includes(".com"))
+    if (!CheckEmail())
     {
+        return;
     }
-    else
+    
+    if (!CheckUsername())
     {
-        console.log("請輸入正確的電子信箱格式");
+        return;
+    }
+    
+    function CheckEmail()
+    {
+        if (emailInput.value.trim() === "")
+        {
+            alert("電子信箱不得為空！");
+            return false;
+        }
+        
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
+        if (!emailRegex.test(emailInput.value))
+        {
+            alert("請輸入正確的電子信箱格式！");
+            return false;
+        }
+        
+        return true;
+    }
+    
+    function CheckUsername()
+    {
+        if (usernameInput.value.trim() === "")
+        {
+            alert("帳號不得為空！");
+            return false;
+        }
+        
+        const usernameRegex = /^[A-Za-z0-9]+$/;
+        
+        if (!usernameRegex.test(usernameInput.value))
+        {
+            alert("帳號只能包含英文跟數字！");
+            return false;
+        }
+        
+        return true;
     }
 }
 
