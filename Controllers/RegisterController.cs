@@ -4,7 +4,7 @@ namespace Learning_ASP.Net.Controllers;
 
 public sealed class RegisterController : Controller
 {
-    // GET
+    [HttpGet]
     public IActionResult Index()
     {
         return View();
