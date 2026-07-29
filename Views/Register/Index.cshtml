@@ -3,3 +3,55 @@
         帳號註冊
     </h3>
 </div>
+
+<form method="post">
+    <div>
+        <input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="電子信箱"/>
+    </div>
+    
+    <div>
+        <input
+            id="username"
+            type="text"
+            name="username"
+            maxlength="20"
+            placeholder="帳號"/>
+    </div>
+    
+    <div>
+        <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="密碼"/>
+    </div>
+    
+    <div>
+        <input
+            id="confirmPassword"
+            type="password"
+            name="confirmPassword"
+            placeholder="密碼確認"/>
+    </div>
+    
+    <button
+        id="confirmButton"
+        type="button">
+        確認註冊
+    </button>
+</form>
+
+<button
+    id="loginPageButton"
+    type="button">
+    返回登入
+</button>
+
+@section Scripts
+{
+    <script src="~/js/Register/Index.js"></script>
+}
