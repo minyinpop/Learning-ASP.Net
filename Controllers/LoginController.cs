@@ -11,15 +11,6 @@ public sealed class LoginController : Controller
     }
 
     [HttpPost]
-    public IActionResult Index(string username, string password)
-    {
-        Console.WriteLine(username);
-        Console.WriteLine(password);
-        
-        return View();
-    }
-
-    [HttpPost]
     public IActionResult Test()
     {
         Console.WriteLine("收到 JS 的 Request。");
