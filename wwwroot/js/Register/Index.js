@@ -31,6 +31,21 @@ async function OnClickConfirmButton()
         return;
     }
     
+    const fetchSettings = {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            email: emailInput.value,
+            username: usernameInput.value,
+            password: passwordInput.value,
+            confirmPassword: confirmPasswordInput.value
+        })
+    }
+    
+    const response = await fetch("/Register/TryRegister", fetchSettings);
+    
     // ===
     
     function CheckEmail()
