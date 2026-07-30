@@ -1,3 +1,4 @@
+using Learning_ASP.Net.Database.Account;
 using Learning_ASP.Net.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,7 +15,7 @@ public sealed class RegisterController : Controller
     [HttpPost]
     public IActionResult TryRegister(RegisterRequestModel model)
     {
-        Console.WriteLine($"Username: {model.Username}");
+        AccountDatabase.InitializeDatabase();
         
         return Json(new
         {
