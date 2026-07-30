@@ -21,11 +21,22 @@ async function OnClickConfirmButton()
         return;
     }
     
+    if (!CheckPassword())
+    {
+        return;
+    }
+    
+    if (!CheckConfirmPassword())
+    {
+        return;
+    }
+    
+    // ===
+    
     function CheckEmail()
     {
-        if (emailInput.value.trim() === "")
+        if (!CheckInputEmpty(emailInput, "電子信箱不得為空！"))
         {
-            alert("電子信箱不得為空！");
             return false;
         }
         
@@ -42,9 +53,8 @@ async function OnClickConfirmButton()
     
     function CheckUsername()
     {
-        if (usernameInput.value.trim() === "")
+        if (!CheckInputEmpty(usernameInput, "帳號不得為空！"))
         {
-            alert("帳號不得為空！");
             return false;
         }
         
@@ -58,9 +68,36 @@ async function OnClickConfirmButton()
         
         return true;
     }
+    
+    function CheckPassword()
+    {
+        return CheckInputEmpty(passwordInput, "密碼不得為空！");
+    }
+    
+    function CheckConfirmPassword()
+    {
+        if (passwordInput.value.trim() !== confirmPasswordInput.value.trim())
+        {
+            alert("確認密碼與密碼不一致！");
+            return false;
+        }
+        
+        return true;
+    }
 }
 
 async function OnClickLoginPageButton()
 {
     window.location.href = "/Login";
+}
+
+function CheckInputEmpty(inputElement, alertMessage)
+{
+    if (inputElement.value.trim() === "")
+    {
+        alert(alertMessage);
+        return false;
+    }
+    
+    return true;
 }
