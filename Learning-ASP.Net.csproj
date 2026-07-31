@@ -11,4 +11,10 @@
       <PackageReference Include="Microsoft.Data.Sqlite" Version="11.0.0-preview.6.26359.118" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Content Update="wwwroot\js\Config\RegisterRules.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
 </Project>
