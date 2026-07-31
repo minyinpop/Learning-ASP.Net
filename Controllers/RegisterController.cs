@@ -15,7 +15,7 @@ public sealed class RegisterController : Controller
     [HttpPost]
     public IActionResult TryRegister(RegisterRequestModel model)
     {
-        AccountDatabase.InitializeDatabase();
+        AccountDatabase.Initialize();
         
         return Json(new
         {
