@@ -7,6 +7,6 @@ public enum AccountDatabaseResult
     Login_AccountNotExists = 102,
     
     // When user register account. ( 200 )
-    AccountRegisterSuccessfully = 201,
-    AccountIsAlreadyExists = 202,
+    Register_Successfully = 201,
+    Register_AccountIsExists = 202,
 }
