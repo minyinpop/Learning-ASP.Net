@@ -11,26 +11,26 @@ loginPageButton.addEventListener("click", OnClickLoginPageButton);
 
 async function OnClickConfirmButton()
 {
-    if (!CheckEmail())
+    if (!await CheckEmail())
     {
         return;
     }
-    
-    if (!CheckUsername())
+
+    if (!await CheckUsername())
     {
         return;
     }
-    
+
     if (!CheckPassword())
     {
         return;
     }
-    
+
     if (!CheckConfirmPassword())
     {
         return;
     }
-    
+
     const fetchSettings = {
         method: "POST",
         headers: {
@@ -43,62 +43,77 @@ async function OnClickConfirmButton()
             confirmPassword: confirmPasswordInput.value
         })
     }
-    
+
     const response = await fetch("/Register/TryRegister", fetchSettings);
     
-    // ===
+    const json = await response.json();
     
-    function CheckEmail()
+    alert(json.message)
+    
+    if (json.success)
     {
-        if (!CheckInputEmpty(emailInput, "電子信箱不得為空！"))
-        {
-            return false;
-        }
-        
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        
-        if (!emailRegex.test(emailInput.value))
-        {
-            alert("請輸入正確的電子信箱格式！");
-            return false;
-        }
-        
-        return true;
+        window.location.href = "/Login";
+    }
+}
+
+async function CheckEmail()
+{
+    if (!CheckInputEmpty(emailInput, "電子信箱不得為空！"))
+    {
+        return false;
     }
     
-    function CheckUsername()
+    const response = await fetch("/Register/GetRegisterRules");
+    
+    const rules = await response.json();
+    
+    const emailRegex = new RegExp(rules.email);
+    
+    if (!emailRegex.test(emailInput.value))
     {
-        if (!CheckInputEmpty(usernameInput, "帳號不得為空！"))
-        {
-            return false;
-        }
-        
-        const usernameRegex = /^[A-Za-z0-9]+$/;
-        
-        if (!usernameRegex.test(usernameInput.value))
-        {
-            alert("帳號只能包含英文跟數字！");
-            return false;
-        }
-        
-        return true;
+        alert("請輸入正確的電子信箱格式！");
+        return false;
     }
     
-    function CheckPassword()
+    return true;
+}
+
+async function CheckUsername()
+{
+    if (!CheckInputEmpty(usernameInput, "帳號不得為空！"))
     {
-        return CheckInputEmpty(passwordInput, "密碼不得為空！");
+        return false;
+    }
+
+    const response = await fetch("/Register/GetRegisterRules");
+
+    const rules = await response.json();
+    
+    const usernameRegex = new RegExp(rules.username);
+    
+    if (!usernameRegex.test(usernameInput.value))
+    {
+        alert("帳號只能包含英文跟數字！");
+        return false;
     }
     
-    function CheckConfirmPassword()
+    return true;
+}
+
+function CheckPassword()
+{
+    return CheckInputEmpty(passwordInput, "密碼不得為空！");
+}
+
+function CheckConfirmPassword()
+{
+    if (passwordInput.value.trim() !== confirmPasswordInput.value.trim())
     {
-        if (passwordInput.value.trim() !== confirmPasswordInput.value.trim())
-        {
-            alert("確認密碼與密碼不一致！");
-            return false;
-        }
-        
-        return true;
+        alert("確認密碼與密碼不一致！");
+        return false;
     }
+    
+    return true;
 }
 
 async function OnClickLoginPageButton()

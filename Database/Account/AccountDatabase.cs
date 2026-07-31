@@ -30,7 +30,7 @@ public static class AccountDatabase
         command.ExecuteNonQuery();
     }
 
-    public static void CreateData(AccountInformationModel account)
+    public static AccountDatabaseResult CreateData(AccountInformationModel account)
     {
         using var connection = new SqliteConnection(_filePath);
         
@@ -41,32 +41,33 @@ public static class AccountDatabase
         if (DataExists(account))
         {
             Console.WriteLine("已經有這筆帳戶資料了。");
+            return AccountDatabaseResult.AccountIsAlreadyExists;
         }
-        else
-        {
-            command.CommandText = $"""
-                                   INSERT INTO {_tableName}
-                                   (
-                                       CreatedAt,
-                                       Email,
-                                       Username,
-                                       Password
-                                   )
-                                   VALUES
-                                   (
-                                       CURRENT_TIMESTAMP,
-                                       @Email,
-                                       @Username,
-                                       @Password
-                                   )
-                                   """;
+        
+        command.CommandText = $"""
+                               INSERT INTO {_tableName}
+                               (
+                                   CreatedAt,
+                                   Email,
+                                   Username,
+                                   Password
+                               )
+                               VALUES
+                               (
+                                   CURRENT_TIMESTAMP,
+                                   @Email,
+                                   @Username,
+                                   @Password
+                               )
+                               """;
 
-            command.Parameters.AddWithValue("@Email", account.Email);
-            command.Parameters.AddWithValue("@Username", account.Username);
-            command.Parameters.AddWithValue("@Password", account.Password);
+        command.Parameters.AddWithValue("@Email", account.Email);
+        command.Parameters.AddWithValue("@Username", account.Username);
+        command.Parameters.AddWithValue("@Password", account.Password);
 
-            command.ExecuteNonQuery();
-        }
+        command.ExecuteNonQuery();
+        
+        return AccountDatabaseResult.AccountRegisterSuccessfully;
     }
 
     private static bool DataExists(AccountInformationModel account)
@@ -81,12 +82,10 @@ public static class AccountDatabase
                                SELECT 1
                                FROM {_tableName}
                                WHERE Email = @Email
-                               OR Username = @Username
                                LIMIT 1
                                """;
 
         command.Parameters.AddWithValue("@Email", account.Email);
-        command.Parameters.AddWithValue("@Username", account.Username);
 
         using var reader = command.ExecuteReader();
         
