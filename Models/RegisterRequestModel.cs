@@ -1,12 +1,12 @@
 namespace Learning_ASP.Net.Models;
 
-public sealed class RegisterRequestModel()
+public sealed class RegisterRequestModel(string email, string username, string password, string confirmPassword)
 {
-    public string Email { get; set; }
+    public string Email { get; private set; } = email;
 
-    public string Username { get; set; }
+    public string Username { get; private set; } = username;
 
-    public string Password { get; set; }
+    public string Password { get; private set; } = password;
 
-    public string ConfirmPassword { get; set; }
+    public string ConfirmPassword { get; private set; } = confirmPassword;
 }
