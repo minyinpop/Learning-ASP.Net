@@ -1,5 +1,6 @@
 using Learning_ASP.Net.Models.Login;
 using Learning_ASP.Net.Models;
+using Learning_ASP.Net.Models.Register;
 using Microsoft.Data.Sqlite;
 
 namespace Learning_ASP.Net.Database.Account;
@@ -31,7 +32,7 @@ public static class AccountDatabase
         command.ExecuteNonQuery();
     }
     
-    private static bool DataExists(AccountInformationModel account)
+    private static bool DataExists(RegisterRequest account)
     {
         using var connection = new SqliteConnection(_filePath);
         
@@ -53,7 +54,7 @@ public static class AccountDatabase
         return reader.Read();
     }
 
-    public static AccountDatabaseResult CreateData(AccountInformationModel account)
+    public static AccountDatabaseResult CreateData(RegisterRequest account)
     {
         using var connection = new SqliteConnection(_filePath);
         
@@ -64,7 +65,7 @@ public static class AccountDatabase
         if (DataExists(account))
         {
             Console.WriteLine("已經有這筆帳戶資料了。");
-            return AccountDatabaseResult.AccountIsAlreadyExists;
+            return AccountDatabaseResult.Register_AccountIsExists;
         }
         
         command.CommandText = $"""
@@ -90,7 +91,7 @@ public static class AccountDatabase
 
         command.ExecuteNonQuery();
         
-        return AccountDatabaseResult.AccountRegisterSuccessfully;
+        return AccountDatabaseResult.Register_Successfully;
     }
 
     public static LoginResult GetData(string email)
@@ -116,7 +117,7 @@ public static class AccountDatabase
         {
             var result = AccountDatabaseResult.Login_Successfully;
 
-            var model = new AccountInformationModel(
+            var model = new RegisterRequest(
                 email: reader["Email"].ToString()!,
                 username: reader["Username"].ToString()!,
                 password: reader["Password"].ToString()!);

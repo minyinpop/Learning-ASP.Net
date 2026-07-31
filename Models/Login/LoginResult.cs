@@ -1,8 +1,10 @@
+using Learning_ASP.Net.Models.Register;
+
 namespace Learning_ASP.Net.Models.Login;
 
-public sealed class LoginResult(AccountDatabaseResult result, AccountInformationModel model)
+public sealed class LoginResult(AccountDatabaseResult result, RegisterRequest model)
 {
     public AccountDatabaseResult Result { get; private set; } = result;
 
-    public AccountInformationModel Model { get; private set; } = model;
+    public RegisterRequest Model { get; private set; } = model;
 }
