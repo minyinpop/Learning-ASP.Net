@@ -39,8 +39,7 @@ async function OnClickConfirmButton()
         body: JSON.stringify({
             email: emailInput.value,
             username: usernameInput.value,
-            password: passwordInput.value,
-            confirmPassword: confirmPasswordInput.value
+            password: passwordInput.value
         })
     }
 

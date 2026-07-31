@@ -16,9 +16,6 @@ public sealed class LoginController : Controller
     [HttpPost]
     public IActionResult TryLogin([FromBody] LoginRequest login)
     {
-        Console.WriteLine(login.Email);
-        Console.WriteLine(login.Password);
-        
         var result = AccountDatabase.GetData(login.Email);
         var model = result.Model;
         
