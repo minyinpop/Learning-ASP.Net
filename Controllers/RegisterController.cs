@@ -13,9 +13,13 @@ public sealed class RegisterController : Controller
     }
 
     [HttpPost]
-    public IActionResult TryRegister(RegisterRequestModel model)
+    public IActionResult TryRegister([FromBody] RegisterRequestModel register)
     {
         AccountDatabase.Initialize();
+        AccountDatabase.CreateData(new AccountInformationModel(
+            email: register.Email,
+            username: register.Username,
+            password: register.Password));
         
         return Json(new
         {
