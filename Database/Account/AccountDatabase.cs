@@ -1,3 +1,4 @@
+using Learning_ASP.Net.Models.Login;
 using Learning_ASP.Net.Models;
 using Microsoft.Data.Sqlite;
 
@@ -28,6 +29,28 @@ public static class AccountDatabase
                                """;
         
         command.ExecuteNonQuery();
+    }
+    
+    private static bool DataExists(AccountInformationModel account)
+    {
+        using var connection = new SqliteConnection(_filePath);
+        
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        
+        command.CommandText = $"""
+                               SELECT 1
+                               FROM {_tableName}
+                               WHERE Email = @Email
+                               LIMIT 1
+                               """;
+
+        command.Parameters.AddWithValue("@Email", account.Email);
+
+        using var reader = command.ExecuteReader();
+        
+        return reader.Read();
     }
 
     public static AccountDatabaseResult CreateData(AccountInformationModel account)
@@ -70,25 +93,41 @@ public static class AccountDatabase
         return AccountDatabaseResult.AccountRegisterSuccessfully;
     }
 
-    private static bool DataExists(AccountInformationModel account)
+    public static LoginResult GetData(string email)
     {
         using var connection = new SqliteConnection(_filePath);
         
         connection.Open();
 
         var command = connection.CreateCommand();
-        
+
         command.CommandText = $"""
-                               SELECT 1
+                               SELECT *
                                FROM {_tableName}
                                WHERE Email = @Email
                                LIMIT 1
                                """;
 
-        command.Parameters.AddWithValue("@Email", account.Email);
+        command.Parameters.AddWithValue("@Email", email);
 
         using var reader = command.ExecuteReader();
-        
-        return reader.Read();
+
+        if (reader.Read())
+        {
+            var result = AccountDatabaseResult.Login_Successfully;
+
+            var model = new AccountInformationModel(
+                email: reader["Email"].ToString()!,
+                username: reader["Username"].ToString()!,
+                password: reader["Password"].ToString()!);
+
+            return new LoginResult(result, model);
+        }
+        else
+        {
+            var result = AccountDatabaseResult.Login_AccountNotExists;
+
+            return new LoginResult(result, null);
+        }
     }
 }

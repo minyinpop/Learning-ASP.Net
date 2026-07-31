@@ -41,10 +41,10 @@ public sealed class RegisterController : Controller
             }
             default:
             {
-                Console.WriteLine($"{typeof(RegisterController)} 傳入了沒有被實作的結果：{result}");
+                Console.WriteLine($"{nameof(TryRegister)} 傳入了沒有被實作的結果：{result}");
                 
                 success = false;
-                message = "發生了錯誤，請聯絡網站管理者：minyinpop@gmail.com";
+                message = "發生了錯誤，請聯絡網站管理者：minyinpop@gmail.com\n錯誤訊息：註冊介面的資料庫要求結果沒有被實作。";
                 break;
             }
         }
