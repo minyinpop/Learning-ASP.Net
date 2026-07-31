@@ -1,36 +1,95 @@
+using Learning_ASP.Net.Models;
 using Microsoft.Data.Sqlite;
 
 namespace Learning_ASP.Net.Database.Account;
 
 public static class AccountDatabase
 {
-    public static void InitializeDatabase()
+    private const string _filePath = "Data Source=Database/Account/Account.db";
+    private const string _tableName = "Account";
+
+    public static void Initialize()
     {
-        using var connection = new SqliteConnection("Data Source=Database/Account/Account.db");
+        using var connection = new SqliteConnection(_filePath);
         
         connection.Open();
         
         var command = connection.CreateCommand();
 
-        command.CommandText = """
-                              CREATE TABLE IF NOT EXISTS Account
-                              (
-                                  Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                  CreatedAt TIMESTAMP,
-                                  Email TEXT,
-                                  Username TEXT,
-                                  Password TEXT
-                              )
-                              """;
+        command.CommandText = $"""
+                               CREATE TABLE IF NOT EXISTS {_tableName}
+                               (
+                                   ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                                   CreatedAt TIMESTAMP,
+                                   Email TEXT,
+                                   Username TEXT,
+                                   Password TEXT
+                               )
+                               """;
+        
+        command.ExecuteNonQuery();
+    }
 
-        try
+    public static void CreateData(AccountInformationModel account)
+    {
+        using var connection = new SqliteConnection(_filePath);
+        
+        connection.Open();
+        
+        var command = connection.CreateCommand();
+
+        if (DataExists(account))
         {
+            Console.WriteLine("已經有這筆帳戶資料了。");
+        }
+        else
+        {
+            command.CommandText = $"""
+                                   INSERT INTO {_tableName}
+                                   (
+                                       CreatedAt,
+                                       Email,
+                                       Username,
+                                       Password
+                                   )
+                                   VALUES
+                                   (
+                                       CURRENT_TIMESTAMP,
+                                       @Email,
+                                       @Username,
+                                       @Password
+                                   )
+                                   """;
+
+            command.Parameters.AddWithValue("@Email", account.Email);
+            command.Parameters.AddWithValue("@Username", account.Username);
+            command.Parameters.AddWithValue("@Password", account.Password);
+
             command.ExecuteNonQuery();
-            Console.WriteLine("Database Initialize Success!");
         }
-        catch (Exception exception)
-        {
-            Console.WriteLine(exception.Message);
-        }
+    }
+
+    private static bool DataExists(AccountInformationModel account)
+    {
+        using var connection = new SqliteConnection(_filePath);
+        
+        connection.Open();
+
+        var command = connection.CreateCommand();
+        
+        command.CommandText = $"""
+                               SELECT 1
+                               FROM {_tableName}
+                               WHERE Email = @Email
+                               OR Username = @Username
+                               LIMIT 1
+                               """;
+
+        command.Parameters.AddWithValue("@Email", account.Email);
+        command.Parameters.AddWithValue("@Username", account.Username);
+
+        using var reader = command.ExecuteReader();
+        
+        return reader.Read();
     }
 }
