@@ -39,8 +39,7 @@ async function OnClickConfirmButton()
         body: JSON.stringify({
             email: emailInput.value,
             username: usernameInput.value,
-            password: passwordInput.value,
-            confirmPassword: confirmPasswordInput.value
+            password: passwordInput.value
         })
     }
 
@@ -48,7 +47,7 @@ async function OnClickConfirmButton()
     
     const json = await response.json();
     
-    alert(json.message)
+    alert(json.message);
     
     if (json.success)
     {
@@ -56,9 +55,14 @@ async function OnClickConfirmButton()
     }
 }
 
+async function OnClickLoginPageButton()
+{
+    window.location.href = "/Login";
+}
+
 async function CheckEmail()
 {
-    if (!CheckInputEmpty(emailInput, "電子信箱不得為空！"))
+    if (CheckInputEmpty(emailInput, "電子信箱不得為空！"))
     {
         return false;
     }
@@ -80,7 +84,7 @@ async function CheckEmail()
 
 async function CheckUsername()
 {
-    if (!CheckInputEmpty(usernameInput, "帳號不得為空！"))
+    if (CheckInputEmpty(usernameInput, "帳號不得為空！"))
     {
         return false;
     }
@@ -102,7 +106,12 @@ async function CheckUsername()
 
 function CheckPassword()
 {
-    return CheckInputEmpty(passwordInput, "密碼不得為空！");
+    if (CheckInputEmpty(passwordInput, "密碼不得為空！"))
+    {
+        return false;
+    }
+    
+    return true;
 }
 
 function CheckConfirmPassword()
@@ -116,18 +125,13 @@ function CheckConfirmPassword()
     return true;
 }
 
-async function OnClickLoginPageButton()
-{
-    window.location.href = "/Login";
-}
-
 function CheckInputEmpty(inputElement, alertMessage)
 {
     if (inputElement.value.trim() === "")
     {
         alert(alertMessage);
-        return false;
+        return true;
     }
     
-    return true;
+    return false;
 }

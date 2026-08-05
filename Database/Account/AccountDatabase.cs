@@ -1,4 +1,6 @@
+using Learning_ASP.Net.Models.Login;
 using Learning_ASP.Net.Models;
+using Learning_ASP.Net.Models.Register;
 using Microsoft.Data.Sqlite;
 
 namespace Learning_ASP.Net.Database.Account;
@@ -29,8 +31,30 @@ public static class AccountDatabase
         
         command.ExecuteNonQuery();
     }
+    
+    private static bool DataExists(RegisterRequest account)
+    {
+        using var connection = new SqliteConnection(_filePath);
+        
+        connection.Open();
 
-    public static AccountDatabaseResult CreateData(AccountInformationModel account)
+        var command = connection.CreateCommand();
+        
+        command.CommandText = $"""
+                               SELECT 1
+                               FROM {_tableName}
+                               WHERE Email = @Email
+                               LIMIT 1
+                               """;
+
+        command.Parameters.AddWithValue("@Email", account.Email);
+
+        using var reader = command.ExecuteReader();
+        
+        return reader.Read();
+    }
+
+    public static AccountDatabaseResult CreateData(RegisterRequest account)
     {
         using var connection = new SqliteConnection(_filePath);
         
@@ -41,7 +65,7 @@ public static class AccountDatabase
         if (DataExists(account))
         {
             Console.WriteLine("已經有這筆帳戶資料了。");
-            return AccountDatabaseResult.AccountIsAlreadyExists;
+            return AccountDatabaseResult.Register_AccountIsExists;
         }
         
         command.CommandText = $"""
@@ -67,28 +91,44 @@ public static class AccountDatabase
 
         command.ExecuteNonQuery();
         
-        return AccountDatabaseResult.AccountRegisterSuccessfully;
+        return AccountDatabaseResult.Register_Successfully;
     }
 
-    private static bool DataExists(AccountInformationModel account)
+    public static LoginResult GetData(string email)
     {
         using var connection = new SqliteConnection(_filePath);
         
         connection.Open();
 
         var command = connection.CreateCommand();
-        
+
         command.CommandText = $"""
-                               SELECT 1
+                               SELECT *
                                FROM {_tableName}
                                WHERE Email = @Email
                                LIMIT 1
                                """;
 
-        command.Parameters.AddWithValue("@Email", account.Email);
+        command.Parameters.AddWithValue("@Email", email);
 
         using var reader = command.ExecuteReader();
-        
-        return reader.Read();
+
+        if (reader.Read())
+        {
+            var result = AccountDatabaseResult.Login_Successfully;
+
+            var model = new RegisterRequest(
+                email: reader["Email"].ToString()!,
+                username: reader["Username"].ToString()!,
+                password: reader["Password"].ToString()!);
+
+            return new LoginResult(result, model);
+        }
+        else
+        {
+            var result = AccountDatabaseResult.Login_AccountNotExists;
+
+            return new LoginResult(result, null);
+        }
     }
 }

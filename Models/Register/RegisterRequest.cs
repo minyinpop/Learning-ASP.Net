@@ -1,6 +1,6 @@
-namespace Learning_ASP.Net.Models;
+namespace Learning_ASP.Net.Models.Register;
 
-public sealed class AccountInformationModel(string email, string username, string password)
+public sealed class RegisterRequest(string email, string username, string password)
 {
     public string Email { get; private set; } = email;
 

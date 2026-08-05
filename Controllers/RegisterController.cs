@@ -1,6 +1,7 @@
 using Learning_ASP.Net.Database.Account;
 using Microsoft.AspNetCore.Mvc;
 using Learning_ASP.Net.Models;
+using Learning_ASP.Net.Models.Register;
 
 namespace Learning_ASP.Net.Controllers;
 
@@ -13,11 +14,11 @@ public sealed class RegisterController : Controller
     }
 
     [HttpPost]
-    public IActionResult TryRegister([FromBody] RegisterRequestModel register)
+    public IActionResult TryRegister([FromBody] RegisterRequest register)
     {
         AccountDatabase.Initialize();
         
-        var result = AccountDatabase.CreateData(new AccountInformationModel(
+        var result = AccountDatabase.CreateData(new RegisterRequest(
             email: register.Email,
             username: register.Username,
             password: register.Password));
@@ -27,13 +28,13 @@ public sealed class RegisterController : Controller
 
         switch (result)
         {
-            case AccountDatabaseResult.AccountRegisterSuccessfully:
+            case AccountDatabaseResult.Register_Successfully:
             {
                 success = true;
                 message = "帳號創建成功，即將為您導航到登入介面！";
                 break;
             }
-            case AccountDatabaseResult.AccountIsAlreadyExists:
+            case AccountDatabaseResult.Register_AccountIsExists:
             {
                 success = false;
                 message = "帳號創建失敗，此信箱已被註冊過了！";
@@ -41,10 +42,10 @@ public sealed class RegisterController : Controller
             }
             default:
             {
-                Console.WriteLine($"{typeof(RegisterController)} 傳入了沒有被實作的結果：{result}");
+                Console.WriteLine($"{nameof(TryRegister)} 傳入了沒有被實作的結果：{result}");
                 
                 success = false;
-                message = "發生了錯誤，請聯絡網站管理者：minyinpop@gmail.com";
+                message = "發生了錯誤，請聯絡網站管理者：minyinpop@gmail.com\n錯誤訊息：註冊介面的資料庫要求結果沒有被實作。";
                 break;
             }
         }
